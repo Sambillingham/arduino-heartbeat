@@ -6,13 +6,16 @@ Arduino arduino;
 int ledPin = 13; // LED onboard in pin 13
 int lightSensor = 7;   // Sensor connected to pin 7
 int BPM;
-int savedTime;
-float passedTime;
+int saveTime;
+float elapsedTime;
 boolean beatingNow = false;
+int [] beats = new int[5];
+int last5Average;
+int previousBeat = 1;
 
 void setup() {
   // println(Arduino.list()); // use to find arduino
-  size(300,200);
+  size(200,200);
 
   arduino = new Arduino(this, "COM6", 57600);   //  Input correct serial port
   arduino.pinMode(ledPin, Arduino.OUTPUT);      // sets the digital pin 13 as output
@@ -23,14 +26,30 @@ void draw() {
      if (beatingNow == false){
        if (arduino.digitalRead(lightSensor) ==  Arduino.HIGH ){ // if LED is on
          
-            println("Saved Time: " + savedTime);
-            println("Current Time: " + millis());
-            passedTime = millis() - savedTime;            
-            passedTime = round((60/(passedTime/1000)));
-            BPM = int(passedTime);
-            println(BPM);
-           
-            savedTime = millis();
+           // println("Start: " + savedTime + "  Stop: " + millis());
+            elapsedTime = millis() - saveTime;            
+            elapsedTime = round((60/(elapsedTime/1000)));
+            BPM = int(elapsedTime);
+                        
+           // beats[0] = beats[1];
+           // beats[1] = beats[2];
+           // beats[2] = beats[3];
+           // beats[3] = beats[4];
+           // beats[4] = BPM;
+            
+            for (int i = 0; i < beats.length; i++){              
+              if ( i < (beats.length)-1){
+              beats [i] = beats[i+1];
+              }
+              //println(beats[i]);
+              last5Average = last5Average + beats[i];
+              if( i == beats.length){
+                beats[i] = BPM;
+              }
+            }
+            println("BPM: "+(last5Average/5));
+            last5Average = 0;
+            saveTime = millis();
             beatingNow = true;
        }
     }
