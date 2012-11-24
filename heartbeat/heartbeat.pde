@@ -3,7 +3,6 @@ import cc.arduino.*;
 
 Arduino arduino;
 
-int ledPin = 13; // LED onboard in pin 13
 int lightSensor = 7;   // Sensor connected to pin 7
 int BPM;
 int saveTime;
@@ -11,14 +10,12 @@ float elapsedTime;
 boolean beatingNow = false;
 int [] beats = new int[5];
 int last5Average;
-int previousBeat = 1;
 
 void setup() {
   // println(Arduino.list()); // use to find arduino
   size(200,200);
 
   arduino = new Arduino(this, "COM6", 57600);   //  Input correct serial port
-  arduino.pinMode(ledPin, Arduino.OUTPUT);      // sets the digital pin 13 as output
   arduino.pinMode(lightSensor, Arduino.INPUT);      // sets the digital pin 7 as input
 }
 
@@ -31,12 +28,6 @@ void draw() {
             elapsedTime = round((60/(elapsedTime/1000)));
             BPM = int(elapsedTime);
                         
-           // beats[0] = beats[1];
-           // beats[1] = beats[2];
-           // beats[2] = beats[3];
-           // beats[3] = beats[4];
-           // beats[4] = BPM;
-            
             for (int i = 0; i < beats.length; i++){              
               if ( i < (beats.length)-1){
               beats [i] = beats[i+1];
