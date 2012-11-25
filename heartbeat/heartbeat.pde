@@ -34,7 +34,7 @@ void draw() {
               }
               //println(beats[i]);
               last5Average = last5Average + beats[i];
-              if( i == beats.length){
+              if( i == beats.length -1 ){
                 beats[i] = BPM;
               }
             }
